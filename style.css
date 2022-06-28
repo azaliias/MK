@@ -262,6 +262,10 @@ body {
     top: 1px;
 }
 
+.button:disabled {
+    background-color: #cd0e03
+}
+
 .winTitle {
     position: absolute;
     top: 25%;
@@ -272,5 +276,17 @@ body {
     z-index: 1000;
     color: white;
     font-family: "Mortal Kombat 3";
+}
+
+.reloadWrap {
+    position: absolute;
+    top: 10%;
+    z-index: 1000;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.reloadWrap .button {
+    margin-top: 0;
 }
 
