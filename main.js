@@ -9,7 +9,10 @@ const player1 = {
     weapon: ['gun'],
     attack: function(){
         console.log(this.name + ' Fight...');
-    }
+    },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 const player2 = {
@@ -20,7 +23,10 @@ const player2 = {
     weapon: ['sword'],
     attack: function(){
         console.log(this.name + ' Fight...');
-    }
+    },
+    changeHP: changeHP,
+    renderHP: renderHP,
+    elHP: elHP,
 };
 
 function createElement(tag, className){
@@ -53,31 +59,70 @@ function createPlayer(playerObject){
     return $player;
 }
 
-function changeHP(player){
-    const $playerLife = document.querySelector('.player' + player.player + ' .life');
-    player.hp -= Math.ceil(Math.random() * 20);
-    $playerLife.style.width = player.hp + '%';
-
-    if(player.hp <= 0){
-        player.hp = 0;
-        $playerLife.style.width = player.hp + '%';
-        let winner = player.player === 1 ? player2 : player1;
-        
-        $arenas.appendChild(playerWin(winner.name));
+function changeHP(damage){
+    this.hp -= damage;
+    
+    if(this.hp <= 0){
+        this.hp = 0;
     }
 }
 
-function playerWin(name){
+function renderHP(){
+    return this.elHP().style.width = this.hp + '%';
+}
+
+function elHP(){
+    return document.querySelector('.player' + this.player + ' .life');
+}
+
+function playerWins(name){
     const $winTitle = createElement('div', 'winTitle');
-    $winTitle.innerText = name + ' win';
-    $randomBtn.disabled = true
+
+    if(name){
+        $winTitle.innerText = name + ' wins';
+    } else {
+        $winTitle.innerText = 'draw';
+    }
+    
     return $winTitle;
 }
 
+function createReloadButton(){
+    const $reloadWrap = createElement('div', 'reloadWrap');
+    const $reloadBtn = createElement('button', 'button');
+    $reloadBtn.innerText = 'Restart';
+
+    $reloadWrap.appendChild($reloadBtn)
+    return $reloadWrap;
+}
+
+function getRandom(num){
+    return Math.ceil(Math.random() * num);
+}
+
 $randomBtn.addEventListener('click', function() {
-    changeHP(player1);
-    if(player1.hp > 0){
-        changeHP(player2);
+    player1.changeHP(getRandom(20));
+    player2.changeHP(getRandom(20));
+    player1.renderHP();
+    player2.renderHP();
+
+    if(player1.hp <= 0 || player2.hp <= 0){
+        $randomBtn.disabled = true;
+        const $reloadBtn = createReloadButton();
+
+        $reloadBtn.addEventListener('click', function(){
+            window.location.reload();
+        });
+
+        $arenas.appendChild($reloadBtn);
+    }
+    
+    if(player1.hp <= 0 && player1.hp < player2.hp){
+        $arenas.appendChild(playerWins(player2.name));
+    } else if(player2.hp <= 0 && player2.hp < player1.hp){
+        $arenas.appendChild(playerWins(player1.name));
+    } else if(player1.hp === 0 && player2.hp === 0){
+        $arenas.appendChild(playerWins());
     }
 });
 
