@@ -1,4 +1,4 @@
-import { HIT, ATTACK, player1, player2, changeHP, renderHP, playerWins, playerAttack, enemyAttack } from './player.js';
+import { player1, player2, playerAttack, enemyAttack } from './player.js';
 import { createElement, showResult, getLogs } from './utils.js';
 
 const $arenas = document.querySelector('.arenas');
